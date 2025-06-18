@@ -3,7 +3,7 @@ pipeline {
 
   environment {
     DEPLOY_USER = 'ec2-user'
-    DEPLOY_HOST = '13.234.95.142'
+    DEPLOY_HOST = '65.0.125.230'
     DEPLOY_PATH = '/home/ec2-user/attendance-app'
     ENV_FILE = '.env'
   }
