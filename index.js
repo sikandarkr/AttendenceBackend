@@ -63,9 +63,20 @@ app.listen(PORT, '0.0.0.0', () => {
   logger.info(`Server running on http://0.0.0.0:${PORT}`);
 });
 
+app.use((err, req, res, next) => {
+  logger.error('Unhandled Express Error', {
+    message: err.message,
+    stack: err.stack,
+    url: req.originalUrl,
+    method: req.method
+  });
+  res.status(500).json({ message: 'Something went wrong!' });
+});
+
+// ✅ Process-level error handling
 process.on('uncaughtException', (err) => {
   logger.error('Uncaught Exception', { message: err.message, stack: err.stack });
-  process.exit(1); // Optional: restart via PM2 or systemd
+  process.exit(1);
 });
 
 process.on('unhandledRejection', (reason, promise) => {
