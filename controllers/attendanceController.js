@@ -9,6 +9,7 @@ exports.markAttendance = async (req, res) => {
     await model.createRecords(sessionId, records);
     success(res, 'Attendance recorded', { sessionId });
   } catch (err) {
+    logger.error('Failed to record attendance', { message: err.message, stack: err.stack });
     error(res, 500, 'Failed to record attendance');
   }
 };

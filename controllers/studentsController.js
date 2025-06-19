@@ -20,7 +20,7 @@ exports.getStudentsByClassAndSection = async (req, res) => {
   
       success(res, 'Fetched students by class and section', students);
     } catch (err) {
-      console.error(err);
+      logger.error('Failed to fetch student list', { message: err.message, stack: err.stack });
       error(res, 500, 'Failed to fetch student list');
     }
   };

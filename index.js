@@ -7,7 +7,7 @@ const attendenceRoutes = require('./routes/attendance');
 
 const studentRoutes = require('./routes/students');
 const teacherRoutes = require('./routes/teachers');
-
+const logger = require('./utils/logger');
 const classesRoutes = require('./routes/classes');
 
 const authRoutes = require('./routes/auth');
@@ -42,6 +42,12 @@ app.use(cors(corsOptions));
 
 app.use(express.json()); // Use express built-in JSON middleware
 
+
+app.use((req, res, next) => {
+  logger.info(`${req.method} ${req.originalUrl}`);
+  next();
+});
+
 // Routes
 app.use('/api/student', studentRoutes);
 app.use('/api/attendance', attendenceRoutes);
@@ -52,6 +58,16 @@ app.use('/api/classes', classesRoutes);
 app.use('/api/auth', authRoutes);
 const PORT = process.env.PORT || 3000;
 
+
 app.listen(PORT, '0.0.0.0', () => {
-  console.log(`Server running on http://0.0.0.0:${PORT}`);
+  logger.info(`Server running on http://0.0.0.0:${PORT}`);
+});
+
+process.on('uncaughtException', (err) => {
+  logger.error('Uncaught Exception', { message: err.message, stack: err.stack });
+  process.exit(1); // Optional: restart via PM2 or systemd
+});
+
+process.on('unhandledRejection', (reason, promise) => {
+  logger.error('Unhandled Rejection', { reason });
 });
